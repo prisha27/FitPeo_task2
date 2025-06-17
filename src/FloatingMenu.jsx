@@ -2,10 +2,9 @@ import React, { useState, useEffect, useRef } from "react";
 
 export default function FloatingMenu() {
   const [open, setOpen] = useState(false);
-  const [bottomOffset, setBottomOffset] = useState(24); // px, default bottom-6
+  const [bottomOffset, setBottomOffset] = useState(24);
   const menuRef = useRef(null);
 
-  // Scroll to Declare section
   const handleScrollToDeclare = () => {
     const declareSection = document.getElementById("declare");
     if (declareSection) {
@@ -14,7 +13,6 @@ export default function FloatingMenu() {
     }
   };
 
-  // Adjust menu position if footer is visible
   useEffect(() => {
     const updatePosition = () => {
       const footer = document.getElementById("footer");
@@ -22,14 +20,11 @@ export default function FloatingMenu() {
       if (!footer || !menu) return;
 
       const footerRect = footer.getBoundingClientRect();
-      const menuRect = menu.getBoundingClientRect();
       const windowHeight = window.innerHeight;
 
-      // If the footer is visible and would overlap the menu
       if (footerRect.top < windowHeight) {
-        // Calculate how much the menu should be pushed up
         const overlap = windowHeight - footerRect.top;
-        setBottomOffset(overlap + 24); // 24px = default bottom-6
+        setBottomOffset(overlap + 24);
       } else {
         setBottomOffset(24);
       }
@@ -71,7 +66,6 @@ export default function FloatingMenu() {
                   </svg>
                 </span>
               </button>
-              <div className="-mb-px box-border overflow-hidden"></div>
               <button
                 className="focus-ring group relative flex h-12 w-full items-center gap-x-3 border-black px-3 transition-colors border-t hover:bg-red-600 text-left text-2xl"
                 onClick={handleScrollToDeclare}
@@ -96,20 +90,20 @@ export default function FloatingMenu() {
                 </button>
               </div>
               <nav className="flex flex-col w-full">
-                <a href="#home" className="focus-ring flex h-12 w-full items-center gap-x-3 border-black px-3 transition-colors border-b hover:bg-red-600 text-lg">
+                <a href="#hero" className="focus-ring flex h-12 w-full items-center gap-x-3 border-black px-3 transition-colors border-b hover:bg-red-600 text-lg">
                   <span>🏠</span> Home
                 </a>
-                <a href="#about" className="focus-ring flex h-12 w-full items-center gap-x-3 border-black px-3 transition-colors border-b hover:bg-red-600 text-lg">
+                <a href="#accordion" className="focus-ring flex h-12 w-full items-center gap-x-3 border-black px-3 transition-colors border-b hover:bg-red-600 text-lg">
                   <span>ℹ️</span> About
                 </a>
                 <a href="#latest" className="focus-ring flex h-12 w-full items-center gap-x-3 border-black px-3 transition-colors border-b hover:bg-red-600 text-lg">
                   <span>📰</span> Latest
                 </a>
-                <a href="#contact" className="focus-ring flex h-12 w-full items-center gap-x-3 border-black px-3 transition-colors border-b hover:bg-red-600 text-lg">
+                <a href="#newsletter" className="focus-ring flex h-12 w-full items-center gap-x-3 border-black px-3 transition-colors border-b hover:bg-red-600 text-lg">
                   <span>✉️</span> Contact
                 </a>
-                <a href="#global-chapter" className="focus-ring flex h-12 w-full items-center gap-x-3 border-black px-3 transition-colors border-b hover:bg-red-600 text-lg">
-                  <span>🌐</span> Choose Global Chapter
+                <a href="#global" className="focus-ring flex h-12 w-full items-center gap-x-3 border-black px-3 transition-colors border-b hover:bg-red-600 text-lg">
+                  <span>🌐</span> Global Chapter
                 </a>
               </nav>
               <button

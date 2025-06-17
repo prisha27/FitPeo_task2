@@ -21,14 +21,14 @@ export default function Footer() {
     <footer className="bg-[#EA5C3C] text-black px-6 py-10">
       <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
 
-        {/* Column 1 – Logo */}
+       
         <div>
-          <h2 className="text-4xl font-extrabold leading-none">
+          <h2 className="text-4xl font-heading leading-none">
             DESIGN<br />DECLARES
           </h2>
         </div>
 
-        {/* Column 2 – Links */}
+       
         <div className="space-y-2 text-base">
           <p>Contact</p>
           <p>Instagram</p>
@@ -36,7 +36,7 @@ export default function Footer() {
           <p>Privacy Policy</p>
         </div>
 
-        {/* Column 3 – Newsletter */}
+       
         <div>
           <p className="font-bold mb-2">Sign up to the D! Newsletter</p>
 
@@ -74,7 +74,7 @@ export default function Footer() {
             <p className="text-sm font-medium">Thank you for subscribing.</p>
           )}
 
-          {/* Hover-only white style */}
+      
           <p
             onClick={() => navigate("/privacy-policy")}
             className="mt-3 text-sm underline cursor-pointer hover:text-white transition-colors duration-200"
@@ -84,9 +84,9 @@ export default function Footer() {
         </div>
       </div>
 
-      {/* Footer Bottom Note aligned to 2nd column */}
+
       <div className="max-w-6xl mx-auto mt-10 grid md:grid-cols-3">
-        <div /> {/* Empty for col 1 */}
+        <div />
         <div className="col-span-2 md:col-span-2 text-sm text-black space-y-2">
           <p>
             This website has been built following low-carbon principles of web development and hosted using serverless computing, by only allocating energy when needed and on demand.{" "}

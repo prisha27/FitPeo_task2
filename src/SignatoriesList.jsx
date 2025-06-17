@@ -1,4 +1,6 @@
-// SignatoriesList.jsx
+
+import { useEffect, useRef, useState } from "react";
+
 
 const signatories = [
   "21-87",
@@ -452,34 +454,141 @@ const signatories = [
   "Alexey Shchusev",
   "Alexey Titarenko",
   "Alexey Vasiliev",
+  "Alexey Yorsh",
+  "Alexandra Grant",
+  "Alexandra Hopf",
+  "Alexandra Karpova",
+  "Alexandra Lerman",
+  "Alexandra Leykauf",
+  "Alexandra Marzella",
+  "Alexandra Mir",
+  "Alexandra Navratil",
+  "Alexandra Pirici",
+  "Alexandra Sukhareva",
+  "Alexandra Zsigmond",
+  "Alexandros Georgiou",
+  "Alexandros Tzannis",
+  "Alexei Blinov",
+  "Alexei Lubimov",
+  "Alexei Shulgin",
+  "Alexej Koschkarow",
+  "Alexey Bogolepov",
+  "Alexey Kallima",
+  "Alexey Kiselev",
+  "Alexey Kondratyev",
+  "Alexey Krupnyakov",
+  "Alexey Larin",
+  "Alexey Orlovsky",
+  "Alexey Parygin",
+  "Alexey Potekhin",
+  "Alexey Savrasov",
+  "Alexey Shchusev",
+  "Alexey Titarenko",
+  "Alexey Vasiliev",
+  "Alexey Yorsh",
+  "Alexandra Grant",
+  "Alexandra Hopf",
+  "Alexandra Karpova",
+  "Alexandra Lerman",
+  "Alexandra Leykauf",
+  "Alexandra Marzella",
+  "Alexandra Mir",
+  "Alexandra Navratil",
+  "Alexandra Pirici",
+  "Alexandra Sukhareva",
+  "Alexandra Zsigmond",
+  "Alexandros Georgiou",
+  "Alexandros Tzannis",
+  "Alexei Blinov",
+  "Alexei Lubimov",
+  "Alexei Shulgin",
+  "Alexej Koschkarow",
+  "Alexey Bogolepov",
+  "Alexey Kallima",
+  "Alexey Kiselev",
+  "Alexey Kondratyev",
+  "Alexey Krupnyakov",
+  "Alexey Larin",
+  "Alexey Orlovsky",
+  "Alexey Parygin",
+  "Alexey Potekhin",
+  "Alexey Savrasov",
+  "Alexey Shchusev",
+  "Alexey Titarenko",
+  "Alexey Vasiliev",
   "Alexey Yorsh"
 ];
 
+
+
 export default function SignatoriesList() {
+  const [count, setCount] = useState(0);
+  const target = 514;
+  const countRef = useRef();
+  const hasAnimated = useRef(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !hasAnimated.current) {
+          hasAnimated.current = true;
+
+          let start = null;
+          const duration = 1200;
+
+          const animateCount = (timestamp) => {
+            if (!start) start = timestamp;
+            const progress = timestamp - start;
+            const easedProgress = Math.min(progress / duration, 1);
+            const current = Math.floor(easedProgress * target);
+            setCount(current);
+            if (progress < duration) {
+              requestAnimationFrame(animateCount);
+            } else {
+              setCount(target);
+            }
+          };
+
+          requestAnimationFrame(animateCount);
+        }
+      },
+      { threshold: 0.4 }
+    );
+
+    if (countRef.current) {
+      observer.observe(countRef.current);
+    }
+
+    return () => {
+      if (countRef.current) {
+        observer.unobserve(countRef.current);
+      }
+    };
+  }, []);
+
   return (
-    <div className="bg-black text-white min-h-screen p-8">
-      <h1 className="text-5xl font-bold mb-2">#514</h1>
-      <h2 className="text-2xl mb-8">
+    <div className="bg-black text-white min-h-screen p-8" ref={countRef}>
+      <h1 className="text-5xl font-bold mb-2 text-left">#{count}</h1>
+      <h2 className="text-xl sm:text-2xl mb-6 text-left">
         Signatories and counting in{" "}
-        <span className="bg-orange-600 text-white text-base rounded-full px-3 py-1 inline-block">
+        <span className="bg-orange-600 text-white text-sm sm:text-base rounded-full px-3 py-1">
           D!UK
         </span>
       </h2>
 
-      <div className="grid grid-cols-3 sm:grid-cols-5 md:grid-cols-7 lg:grid-cols-9 gap-2 text-xs tracking-tight leading-tight">
+      <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-10 gap-2 text-xs tracking-tight leading-tight">
         {signatories.map((name, idx) => (
           <a
-  key={idx}
-  href="https://www.pentagram.com/"
-  target="_blank"
-  rel="noopener noreferrer"
-  className="hover:underline transition-all px-1 py-0.5"
->
-  {name}
-  </a>
+            key={idx}
+            href="https://www.pentagram.com/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:underline transition-all px-1 py-0.5"
+          >
+            {name}
+          </a>
         ))}
       </div>
     </div>
   );
 }
-

@@ -1,5 +1,4 @@
-// GlobalSupportersList.jsx
-
+import { useEffect, useRef, useState } from "react";
 const supporters = [
   "Celina Hilbert",
   "Alena Smith Interior Design",
@@ -233,11 +232,59 @@ const supporters = [
   
 ];
 
+
+
 export default function GlobalSupportersList() {
+  const [count, setCount] = useState(200);
+  const target = 663;
+  const countRef = useRef();
+  const hasAnimated = useRef(false); // Prevents re-triggering
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !hasAnimated.current) {
+          hasAnimated.current = true;
+
+          let start = null;
+          const duration = 1200;
+
+          const animateCount = (timestamp) => {
+            if (!start) start = timestamp;
+            const progress = timestamp - start;
+            const easedProgress = Math.min(progress / duration, 1);
+            const current = Math.floor(200 + easedProgress * (target - 200));
+            setCount(current);
+            if (progress < duration) {
+              requestAnimationFrame(animateCount);
+            } else {
+              setCount(target);
+            }
+          };
+
+          requestAnimationFrame(animateCount);
+        }
+      },
+      {
+        threshold: 0.4, // Adjusts when the animation should trigger
+      }
+    );
+
+    if (countRef.current) {
+      observer.observe(countRef.current);
+    }
+
+    return () => {
+      if (countRef.current) {
+        observer.unobserve(countRef.current);
+      }
+    };
+  }, []);
+
   return (
-    <div className="bg-black text-white min-h-screen px-4 py-12">
-      <div className="text-center mb-10">
-        <h1 className="text-5xl font-bold mb-2">#663</h1>
+    <div className="bg-black text-white min-h-screen px-4 py-12" ref={countRef}>
+      <div className="text-left mb-10">
+        <h1 className="text-5xl font-bold mb-2">#{count}</h1>
         <h2 className="text-2xl">
           Global Supporters in{" "}
           <span className="bg-orange-600 text-white text-base rounded-full px-3 py-1 inline-block">
@@ -262,3 +309,4 @@ export default function GlobalSupportersList() {
     </div>
   );
 }
+

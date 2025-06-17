@@ -16,61 +16,55 @@ export default function Home() {
   const [progress, setProgress] = useState(0);
   const [showFloating, setShowFloating] = useState(false);
   const [revealFooter, setRevealFooter] = useState(false);
+
   const splashRef = useRef(null);
 
+  // Show floating menu after Hero animation or time
   useEffect(() => {
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.body.style.overflow = "auto";
-    };
-  }, []);
-
-  useEffect(() => {
-    const timer = setTimeout(() => setShowFloating(true), 3300);
+    const timer = setTimeout(() => setShowFloating(true), 3000);
     return () => clearTimeout(timer);
   }, []);
 
+  // Handle footer reveal when end of black part is reached
   useEffect(() => {
-    const handleScroll = () => {
-      const splashEl = splashRef.current;
-      if (!splashEl) return;
+    const el = splashRef.current;
+    if (!el) return;
 
-      const scrollTop = splashEl.scrollTop;
-      const scrollHeight = splashEl.scrollHeight;
-      const clientHeight = splashEl.clientHeight;
+    const handleRevealFooter = () => {
+      const scrollTop = el.scrollTop;
+      const scrollHeight = el.scrollHeight;
+      const clientHeight = el.clientHeight;
 
-      // Footer reveal when bottom reached
-      const atBottom = scrollTop + clientHeight >= scrollHeight - 10;
+      const atBottom = scrollTop + clientHeight >= scrollHeight - 20;
       setRevealFooter(atBottom);
-
-      // Scroll Progress logic
-      const sections = ["accordion", "donate", "acts", "emergency"];
-      let visibleCount = 0;
-
-      sections.forEach((id, index) => {
-        const el = document.getElementById(id);
-        if (el) {
-          const rect = el.getBoundingClientRect();
-          if (rect.top <= window.innerHeight * 0.5 && rect.bottom > 0) {
-            visibleCount = index + 1;
-          }
-        }
-      });
-
-      const progressMap = [0, 10, 30, 40, 60];
-      setProgress(progressMap[visibleCount] || 0);
     };
 
-    const splashEl = splashRef.current;
-    splashEl?.addEventListener("scroll", handleScroll, { passive: true });
-    handleScroll();
+    el.addEventListener("scroll", handleRevealFooter, { passive: true });
+    return () => el.removeEventListener("scroll", handleRevealFooter);
+  }, []);
 
-    return () => splashEl?.removeEventListener("scroll", handleScroll);
+  // Scroll progress for progress bar
+  useEffect(() => {
+    const el = splashRef.current;
+    if (!el) return;
+
+    const handleScroll = () => {
+      const scrollTop = el.scrollTop;
+      const scrollHeight = el.scrollHeight;
+      const clientHeight = el.clientHeight;
+
+      const totalScrollable = scrollHeight - clientHeight;
+      const scrolledPercent = (scrollTop / totalScrollable) * 100;
+      setProgress(Math.min(100, Math.max(0, scrolledPercent)));
+    };
+
+    el.addEventListener("scroll", handleScroll, { passive: true });
+    return () => el.removeEventListener("scroll", handleScroll);
   }, []);
 
   return (
     <>
-      {/* 🔴 Progress Bar */}
+      {/* Progress bar */}
       <div className="fixed top-0 left-0 w-full h-1 bg-gray-200 z-[100]">
         <div
           className="h-full bg-red-600 transition-all duration-300"
@@ -78,9 +72,10 @@ export default function Home() {
         />
       </div>
 
-      {/* Black Scrollable Section */}
-      <SplashScroll ref={splashRef} revealFooter={revealFooter}>
-        <section id="hero"><Hero /></section>
+      <SplashScroll ref={splashRef}>
+        <section id="hero">
+          <Hero />
+        </section>
 
         {showFloating && !revealFooter && (
           <div className="fixed top-6 right-6 z-[60]">
@@ -88,20 +83,37 @@ export default function Home() {
           </div>
         )}
 
-        <section id="accordion"><AccordionItem /></section>
-        <section id="donate"><Donate /></section>
-        <section id="acts"><ActsOf /></section>
-        <section id="emergency"><Emergency /></section>
-        <section id="latest"><LatestNews /></section>
-        <section id="newsletter"><Newsletter /></section>
-        <section id="list"><SignatoriesList /></section>
-        <section id="global"><GlobalSupportersList /></section>
+        <section id="accordion">
+          <AccordionItem />
+        </section>
+        <section id="donate">
+          <Donate />
+        </section>
+        <section id="acts">
+          <ActsOf />
+        </section>
+        <section id="emergency">
+          <Emergency />
+        </section>
+        <section id="latest">
+          <LatestNews />
+        </section>
+        <section id="newsletter">
+          <Newsletter />
+        </section>
+        <section id="list">
+          <SignatoriesList />
+        </section>
+        <section id="global">
+          <GlobalSupportersList />
+        </section>
       </SplashScroll>
 
-      {/* Footer below, hidden until black slides up */}
-      <section id="footer" className="relative z-10">
-        <Footer />
-      </section>
+      {revealFooter && (
+        <section id="footer" className="relative z-30 bg-red-600 text-white">
+          <Footer />
+        </section>
+      )}
     </>
   );
 }
