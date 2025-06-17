@@ -238,7 +238,7 @@ export default function GlobalSupportersList() {
   const [count, setCount] = useState(200);
   const target = 663;
   const countRef = useRef();
-  const hasAnimated = useRef(false); // Prevents re-triggering
+  const hasAnimated = useRef(false);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -266,7 +266,7 @@ export default function GlobalSupportersList() {
         }
       },
       {
-        threshold: 0.4, // Adjusts when the animation should trigger
+        threshold: 0.4, 
       }
     );
 

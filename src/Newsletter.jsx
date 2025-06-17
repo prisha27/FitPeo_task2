@@ -7,7 +7,7 @@ export default function DonateD() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Add your form submission logic here (API call, validation, etc.)
+    //logic
   };
 
   return (

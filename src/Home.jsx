@@ -16,46 +16,52 @@ export default function Home() {
   const [progress, setProgress] = useState(0);
   const [showFloating, setShowFloating] = useState(false);
   const [revealFooter, setRevealFooter] = useState(false);
-
   const splashRef = useRef(null);
 
-  // Show floating menu after Hero animation or time
   useEffect(() => {
     const timer = setTimeout(() => setShowFloating(true), 3000);
     return () => clearTimeout(timer);
   }, []);
 
-  // Handle footer reveal when end of black part is reached
   useEffect(() => {
     const el = splashRef.current;
     if (!el) return;
 
     const handleRevealFooter = () => {
-      const scrollTop = el.scrollTop;
-      const scrollHeight = el.scrollHeight;
-      const clientHeight = el.clientHeight;
-
-      const atBottom = scrollTop + clientHeight >= scrollHeight - 20;
-      setRevealFooter(atBottom);
+      try {
+        const matrix = getComputedStyle(el).transform;
+        const currentY = matrix !== 'none' ? 
+          parseInt(matrix.split(', ')[5]) : 0;
+        
+        const adjustedScrollTop = el.scrollTop - currentY;
+        const atBottom = adjustedScrollTop + el.clientHeight >= el.scrollHeight - 20;
+        setRevealFooter(atBottom);
+      } catch (error) {
+        console.error("Scroll calculation error:", error);
+      }
     };
 
     el.addEventListener("scroll", handleRevealFooter, { passive: true });
     return () => el.removeEventListener("scroll", handleRevealFooter);
   }, []);
 
-  // Scroll progress for progress bar
   useEffect(() => {
     const el = splashRef.current;
     if (!el) return;
 
     const handleScroll = () => {
-      const scrollTop = el.scrollTop;
-      const scrollHeight = el.scrollHeight;
-      const clientHeight = el.clientHeight;
+      try {
+        const matrix = getComputedStyle(el).transform;
+        const currentY = matrix !== 'none' ? 
+          parseInt(matrix.split(', ')[5]) : 0;
 
-      const totalScrollable = scrollHeight - clientHeight;
-      const scrolledPercent = (scrollTop / totalScrollable) * 100;
-      setProgress(Math.min(100, Math.max(0, scrolledPercent)));
+        const adjustedScrollTop = el.scrollTop - currentY;
+        const totalScrollable = el.scrollHeight - el.clientHeight;
+        const scrolledPercent = (adjustedScrollTop / totalScrollable) * 100;
+        setProgress(Math.min(100, Math.max(0, scrolledPercent)));
+      } catch (error) {
+        console.error("Progress calculation error:", error);
+      }
     };
 
     el.addEventListener("scroll", handleScroll, { passive: true });
@@ -64,7 +70,7 @@ export default function Home() {
 
   return (
     <>
-      {/* Progress bar */}
+ 
       <div className="fixed top-0 left-0 w-full h-1 bg-gray-200 z-[100]">
         <div
           className="h-full bg-red-600 transition-all duration-300"
@@ -72,17 +78,11 @@ export default function Home() {
         />
       </div>
 
-      <SplashScroll ref={splashRef}>
+     
+      <SplashScroll ref={splashRef} revealFooter={revealFooter}>
         <section id="hero">
           <Hero />
         </section>
-
-        {showFloating && !revealFooter && (
-          <div className="fixed top-6 right-6 z-[60]">
-            <FloatingMenu />
-          </div>
-        )}
-
         <section id="accordion">
           <AccordionItem />
         </section>
@@ -109,6 +109,10 @@ export default function Home() {
         </section>
       </SplashScroll>
 
+     
+      {showFloating && !revealFooter && <FloatingMenu />}
+
+  
       {revealFooter && (
         <section id="footer" className="relative z-30 bg-red-600 text-white">
           <Footer />
