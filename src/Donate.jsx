@@ -2,7 +2,7 @@ import React from "react";
 
 export default function DonateD() {
   return (
-    <div className="min-h-screen bg-black flex flex-col md:flex-row pt-24">
+     <div className="min-h-screen bg-black flex flex-col md:flex-row pt-24">
 
       <div className="w-full md:w-1/3 flex flex-col items-start p-6">
         <h2 className="text-white text-xl font-bold mb-2">Donate to D!</h2>

@@ -1,21 +1,61 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 export default function FloatingMenu() {
   const [open, setOpen] = useState(false);
+  const [bottomOffset, setBottomOffset] = useState(24); // px, default bottom-6
+  const menuRef = useRef(null);
 
+  // Scroll to Declare section
   const handleScrollToDeclare = () => {
     const declareSection = document.getElementById("declare");
     if (declareSection) {
       declareSection.scrollIntoView({ behavior: "smooth" });
-      setOpen(false); // Optionally close menu after scroll
+      setOpen(false);
     }
   };
 
-  return (
-    <div className="font-h3 fixed bottom-4 right-4 z-20 border border-black bg-white text-black max-sm:left-4 md:bottom-6 md:right-6">
-      <div className="max-sm:!w-auto" style={{ width: open ? "26rem" : "13rem" }}>
-        <div className="flex h-full flex-col">
+  // Adjust menu position if footer is visible
+  useEffect(() => {
+    const updatePosition = () => {
+      const footer = document.getElementById("footer");
+      const menu = menuRef.current;
+      if (!footer || !menu) return;
 
+      const footerRect = footer.getBoundingClientRect();
+      const menuRect = menu.getBoundingClientRect();
+      const windowHeight = window.innerHeight;
+
+      // If the footer is visible and would overlap the menu
+      if (footerRect.top < windowHeight) {
+        // Calculate how much the menu should be pushed up
+        const overlap = windowHeight - footerRect.top;
+        setBottomOffset(overlap + 24); // 24px = default bottom-6
+      } else {
+        setBottomOffset(24);
+      }
+    };
+
+    window.addEventListener("scroll", updatePosition);
+    window.addEventListener("resize", updatePosition);
+    updatePosition();
+
+    return () => {
+      window.removeEventListener("scroll", updatePosition);
+      window.removeEventListener("resize", updatePosition);
+    };
+  }, []);
+
+  return (
+    <div
+      ref={menuRef}
+      style={{ bottom: `${bottomOffset}px` }}
+      className="font-h3 fixed right-4 z-20 border border-black bg-black text-white rounded-t-2xl shadow-lg transition-all duration-300 max-sm:left-4 md:right-6"
+    >
+      <div
+        className={`transition-all duration-300 bg-white text-black rounded-t-2xl overflow-hidden`}
+        style={{ width: open ? "26rem" : "13rem" }}
+      >
+        <div className="flex h-full flex-col">
           {!open && (
             <>
               <button
@@ -33,7 +73,7 @@ export default function FloatingMenu() {
               </button>
               <div className="-mb-px box-border overflow-hidden"></div>
               <button
-                className="focus-ring group relative focus-ring flex h-12 w-full items-center gap-x-3 border-black px-3 transition-colors border-t hover:bg-red-600 text-left text-2xl"
+                className="focus-ring group relative flex h-12 w-full items-center gap-x-3 border-black px-3 transition-colors border-t hover:bg-red-600 text-left text-2xl"
                 onClick={handleScrollToDeclare}
               >
                 Declare Now
@@ -73,7 +113,7 @@ export default function FloatingMenu() {
                 </a>
               </nav>
               <button
-                className="focus-ring group relative focus-ring flex h-12 w-full items-center gap-x-3 border-black px-3 transition-colors border-t hover:bg-red-600 text-left text-2xl"
+                className="focus-ring group relative flex h-12 w-full items-center gap-x-3 border-black px-3 transition-colors border-t hover:bg-red-600 text-left text-2xl"
                 onClick={handleScrollToDeclare}
               >
                 Declare Now

@@ -15,7 +15,7 @@ const events = [
     title: "Designing Tomorrow: Speculative Thinking Shapes Our Present",
     summary:
       "Design Declares' November Event Challenges Perspectives on Sustainability and Innovation",
-    link: "/sd4p", 
+    link: "https://designdeclares.com/latest/designing-tomorrow-speculative-thinking-shapes-our-present", 
   },
 ];
 
@@ -65,11 +65,14 @@ export default function LatestSection() {
             </div>
           ))}
 
-          <div className="mt-8">
-            <button className="bg-white text-black font-semibold px-8 py-3 rounded-full hover:bg-orange-500 hover:text-white transition">
-              See all the latest
-            </button>
-          </div>
+         <div className="mt-8">
+  <button
+    onClick={() => window.location.href = "https://designdeclares.com/latest"}
+    className="bg-white text-black font-semibold px-8 py-3 rounded-full hover:bg-orange-500 hover:text-white transition"
+  >
+    See all the latest
+  </button>
+</div>
         </motion.div>
       </div>
     </div>

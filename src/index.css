@@ -3,7 +3,12 @@
 @tailwind utilities;
 
 
-/* In your styles.css or Tailwind's @layer if using Tailwind */
+html, body {
+  height: 100%;
+  overflow-x: hidden;
+}
+
+
 @keyframes revealText {
   0% {
     clip-path: inset(100% 0 0 0);

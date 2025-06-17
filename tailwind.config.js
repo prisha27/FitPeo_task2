@@ -6,7 +6,7 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        headline: ['Anton', 'Impact', 'Arial Narrow', 'sans-serif'],
+        headline: ['Neue Haas Grotesk','Anton', 'Impact', 'Arial Narrow', 'sans-serif'],
       },
       animation: {
         'reveal-text': 'revealText 1s ease-out forwards',
